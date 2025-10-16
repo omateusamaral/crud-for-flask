@@ -1,0 +1,257 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/products": {
+      "post": {
+        "operationId": "ProductsController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProductDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Produto criado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Product"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Products"
+        ]
+      },
+      "get": {
+        "operationId": "ProductsController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Lista de produtos com paginação",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductsPage"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Products"
+        ]
+      }
+    },
+    "/products/{id}": {
+      "get": {
+        "operationId": "ProductsController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Produto encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Product"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Products"
+        ]
+      },
+      "put": {
+        "operationId": "ProductsController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProductDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Produto atualizado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Product"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Products"
+        ]
+      },
+      "delete": {
+        "operationId": "ProductsController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Produto removido com sucesso"
+          }
+        },
+        "tags": [
+          "Products"
+        ]
+      }
+    },
+    "/products/{id}/stock": {
+      "patch": {
+        "operationId": "ProductsController_adjustStock",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdjustStockDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Estoque ajustado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Product"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Products"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "Stock Control API",
+    "description": "CRUD de produtos com NestJS, TypeORM e SQLite",
+    "version": "1.0",
+    "contact": {}
+  },
+  "tags": [
+    {
+      "name": "products",
+      "description": ""
+    }
+  ],
+  "servers": [],
+  "components": {
+    "schemas": {
+      "CreateProductDto": {
+        "type": "object",
+        "properties": {
+          "sku": {
+            "type": "string",
+            "example": "SKU123",
+            "description": "SKU do produto"
+          },
+          "name": {
+            "type": "string",
+            "example": "Notebook Dell XPS 13",
+            "description": "Nome do produto"
+          },
+          "quantity": {
+            "type": "number",
+            "example": 10,
+            "description": "Quantidade em estoque"
+          },
+          "price": {
+            "type": "string",
+            "example": 5999.99,
+            "description": "Preço do produto"
+          }
+        },
+        "required": [
+          "sku",
+          "name",
+          "quantity",
+          "price"
+        ]
+      },
+      "Product": {
+        "type": "object",
+        "properties": {}
+      },
+      "ProductsPage": {
+        "type": "object",
+        "properties": {}
+      },
+      "UpdateProductDto": {
+        "type": "object",
+        "properties": {}
+      },
+      "AdjustStockDto": {
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "number",
+            "example": 5,
+            "description": "Quantidade a ajustar no estoque"
+          }
+        },
+        "required": [
+          "amount"
+        ]
+      }
+    }
+  }
+}
