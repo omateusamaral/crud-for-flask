@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.0",
   "paths": {
-    "/products": {
+    "/v1/products": {
       "post": {
-        "operationId": "ProductsController_create",
+        "operationId": "ProductsController_create_v1",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -32,7 +32,7 @@
         ]
       },
       "get": {
-        "operationId": "ProductsController_findAll",
+        "operationId": "ProductsController_findAll_v1",
         "parameters": [],
         "responses": {
           "200": {
@@ -51,9 +51,9 @@
         ]
       }
     },
-    "/products/{id}": {
+    "/v1/products/{id}": {
       "get": {
-        "operationId": "ProductsController_findOne",
+        "operationId": "ProductsController_findOne_v1",
         "parameters": [
           {
             "name": "id",
@@ -81,7 +81,7 @@
         ]
       },
       "put": {
-        "operationId": "ProductsController_update",
+        "operationId": "ProductsController_update_v1",
         "parameters": [
           {
             "name": "id",
@@ -119,7 +119,7 @@
         ]
       },
       "delete": {
-        "operationId": "ProductsController_remove",
+        "operationId": "ProductsController_remove_v1",
         "parameters": [
           {
             "name": "id",
@@ -140,9 +140,9 @@
         ]
       }
     },
-    "/products/{id}/stock": {
+    "/v1/products/{id}/adjust-stock": {
       "patch": {
-        "operationId": "ProductsController_adjustStock",
+        "operationId": "ProductsController_adjustStock_v1",
         "parameters": [
           {
             "name": "id",
