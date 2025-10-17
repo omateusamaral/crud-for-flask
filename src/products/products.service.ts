@@ -21,12 +21,12 @@ export class ProductsService {
     private readonly cache: ProductsCache,
   ) {}
 
-  create(dto: CreateProductDto): Promise<Product> {
-    if (this.findOneBySku(dto.sku)) {
-      throw new BadRequestException('SKU must be unique');
+  async create(dto: CreateProductDto): Promise<Product> {
+    if (await this.findOneBySku(dto.sku)) {
+      throw new BadRequestException('SKU  must be unique');
     }
 
-    return this.repo.save(
+    return await this.repo.save(
       this.repo.create({
         sku: dto.sku,
         name: dto.name,
@@ -47,21 +47,22 @@ export class ProductsService {
   }
 
   async findOne(id: string): Promise<Product> {
-    if (this.cache.get(id)) {
+    if (await this.cache.get(id)) {
       this.logger.log(`Cache hit for product id: ${id}`);
-      return this.cache.get(id);
+      return await this.cache.get(id);
     }
 
     const item = await this.repo.findOneBy({ id });
     if (!item) {
       throw new NotFoundException('Product not found');
     }
-    this.cache.set(id, item);
+    await this.cache.set(id, item);
     return item;
   }
 
-  async findOneBySku(sku: string): Promise<Product> {
-    return await this.repo.findOneBy({ sku });
+  async findOneBySku(sku: string): Promise<boolean> {
+    const product = await this.repo.findOneBy({ sku });
+    return Boolean(product);
   }
 
   async update(id: string, dto: UpdateProductDto): Promise<Product> {

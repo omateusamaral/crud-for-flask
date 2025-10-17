@@ -77,7 +77,7 @@ export class ProductsController {
     return this.productsService.remove(id);
   }
 
-  @Patch(':id/stock')
+  @Patch(':id/adjust-stock')
   @ApiResponse({
     status: 200,
     description: 'Estoque ajustado com sucesso',
