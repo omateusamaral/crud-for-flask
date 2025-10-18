@@ -1,12 +1,17 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProductsModule } from './products/products.module';
-import { Product } from './entities/product.entity';
+import { Product } from './products/entities/product.entity';
 import { join } from 'path';
 import { CacheModule } from '@nestjs/cache-manager';
+import { AuthModule } from './auth/auth.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     CacheModule.register({
       isGlobal: true,
       ttl: 6 * 3600 * 1000, // 6 hours
@@ -19,6 +24,7 @@ import { CacheModule } from '@nestjs/cache-manager';
       logging: false,
     }),
     ProductsModule,
+    AuthModule,
   ],
 })
 export class AppModule {}

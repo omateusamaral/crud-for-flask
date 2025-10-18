@@ -9,15 +9,18 @@ import {
   Delete,
   Put,
   HttpCode,
+  UseGuards,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { AdjustStockDto } from './dto/adjust-stock.dto';
 import { ApiResponse } from '@nestjs/swagger';
-import { Product } from '../entities/product.entity';
+import { Product } from './entities/product.entity';
 import { ProductsPage } from './products.interface';
+import { ApiKeyGuard } from '../auth/guards/api-key.guard';
 
+@UseGuards(ApiKeyGuard)
 @Controller({
   version: '1',
   path: 'products',

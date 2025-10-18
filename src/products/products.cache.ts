@@ -1,7 +1,7 @@
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Inject, Injectable } from '@nestjs/common';
 import { Cache } from 'cache-manager';
-import { Product } from 'src/entities/product.entity';
+import { Product } from '../products/entities/product.entity';
 
 @Injectable()
 export class ProductsCache {
