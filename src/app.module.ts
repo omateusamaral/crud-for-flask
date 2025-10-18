@@ -8,23 +8,23 @@ import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
-    CacheModule.register({
-      isGlobal: true,
-      ttl: 6 * 3600 * 1000, // 6 hours
-    }),
-    TypeOrmModule.forRoot({
-      type: 'sqlite',
-      database: join(__dirname, '..', 'data', 'db.sqlite'),
-      entities: [Product],
-      synchronize: true,
-      logging: false,
-    }),
-    ProductsModule,
-    AuthModule,
-  ],
+    imports: [
+        ConfigModule.forRoot({
+            isGlobal: true,
+        }),
+        CacheModule.register({
+            isGlobal: true,
+            ttl: 6 * 3600 * 1000, // 6 hours
+        }),
+        TypeOrmModule.forRoot({
+            type: 'sqlite',
+            database: join(__dirname, '..', 'data', 'db.sqlite'),
+            entities: [Product],
+            synchronize: true,
+            logging: false,
+        }),
+        ProductsModule,
+        AuthModule,
+    ],
 })
 export class AppModule {}

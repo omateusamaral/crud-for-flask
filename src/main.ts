@@ -8,10 +8,6 @@ import { join } from 'path';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  app.enableVersioning({
-    type: VersioningType.URI,
-  });
-
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
 
   const config = new DocumentBuilder()
@@ -23,19 +19,13 @@ async function bootstrap() {
 
   const document = SwaggerModule.createDocument(app, config);
 
-  // Gera o arquivo swagger.json (para backup ou deploy)
   writeFileSync(
     join(process.cwd(), 'swagger.json'),
     JSON.stringify(document, null, 2),
   );
 
-  // Serve o Swagger UI interativo
-  SwaggerModule.setup('api/docs', app, document, {
-    swaggerOptions: { persistAuthorization: true },
-  });
-
   app.enableVersioning({
-    type: VersioningType.URI, // <- isso cria rotas do tipo /v1/*
+    type: VersioningType.URI,
   });
 
   await app.listen(3001);
