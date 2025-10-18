@@ -8,25 +8,38 @@ import { join } from 'path';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
+  app.enableVersioning({
+    type: VersioningType.URI,
+  });
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+      forbidNonWhitelisted: true,
+    }),
+  );
 
   const config = new DocumentBuilder()
     .setTitle('Stock Control API')
     .setDescription('CRUD de produtos com NestJS, TypeORM e SQLite')
     .setVersion('1.0')
-    .addTag('products')
+    .addApiKey(
+      {
+        type: 'apiKey',
+        name: 'x-api-key',
+        in: 'header',
+      },
+      'x-api-key',
+    )
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
-
   writeFileSync(
     join(process.cwd(), 'swagger.json'),
     JSON.stringify(document, null, 2),
   );
-
-  app.enableVersioning({
-    type: VersioningType.URI,
-  });
+  SwaggerModule.setup('api/docs', app, document);
 
   await app.listen(3001);
   console.log('✅ API rodando em http://localhost:3001');

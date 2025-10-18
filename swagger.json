@@ -27,6 +27,11 @@
             }
           }
         },
+        "security": [
+          {
+            "x-api-key": []
+          }
+        ],
         "tags": [
           "Products"
         ]
@@ -46,6 +51,11 @@
             }
           }
         },
+        "security": [
+          {
+            "x-api-key": []
+          }
+        ],
         "tags": [
           "Products"
         ]
@@ -76,6 +86,11 @@
             }
           }
         },
+        "security": [
+          {
+            "x-api-key": []
+          }
+        ],
         "tags": [
           "Products"
         ]
@@ -114,6 +129,11 @@
             }
           }
         },
+        "security": [
+          {
+            "x-api-key": []
+          }
+        ],
         "tags": [
           "Products"
         ]
@@ -135,6 +155,11 @@
             "description": "Produto removido com sucesso"
           }
         },
+        "security": [
+          {
+            "x-api-key": []
+          }
+        ],
         "tags": [
           "Products"
         ]
@@ -175,6 +200,11 @@
             }
           }
         },
+        "security": [
+          {
+            "x-api-key": []
+          }
+        ],
         "tags": [
           "Products"
         ]
@@ -187,14 +217,16 @@
     "version": "1.0",
     "contact": {}
   },
-  "tags": [
-    {
-      "name": "products",
-      "description": ""
-    }
-  ],
+  "tags": [],
   "servers": [],
   "components": {
+    "securitySchemes": {
+      "x-api-key": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "x-api-key"
+      }
+    },
     "schemas": {
       "CreateProductDto": {
         "type": "object",
