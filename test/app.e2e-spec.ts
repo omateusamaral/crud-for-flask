@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import { Product } from '../src/entities/product.entity';
+import { Product } from '../src/products/entities/product.entity';
 import { AppModule } from '../src/app.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
@@ -23,6 +23,7 @@ describe('AppController (e2e) - SQLite in-memory', () => {
 
     app = moduleFixture.createNestApplication();
     await app.init();
+    process.env.API_KEY = `fake-api-key`;
   });
 
   afterAll(async () => {
@@ -40,6 +41,7 @@ describe('AppController (e2e) - SQLite in-memory', () => {
   it('Should create a product', async () => {
     return await request(app.getHttpServer())
       .post('/products')
+      .set('x-api-key', 'fake-api-key')
       .send(product)
       .then(async (response) => {
         expect(response.body).toHaveProperty('id');
@@ -53,6 +55,7 @@ describe('AppController (e2e) - SQLite in-memory', () => {
   it('Should get a product by ID', async () => {
     const createResponse = await request(app.getHttpServer())
       .post('/products')
+      .set('x-api-key', 'fake-api-key')
       .send({
         ...product,
         sku: 'SKU654321',
@@ -63,9 +66,9 @@ describe('AppController (e2e) - SQLite in-memory', () => {
     console.log(productId);
     return await request(app.getHttpServer())
       .get(`/products/${productId}`)
+      .set('x-api-key', 'fake-api-key')
       .expect(200)
       .then((response) => {
-        console.log(response.body);
         expect(response.body.id).toBe(productId);
         expect(response.body.name).toBe('Test Product');
         expect(response.body.description).toBe('Description of test product');
@@ -77,6 +80,7 @@ describe('AppController (e2e) - SQLite in-memory', () => {
   it('Should update a product', async () => {
     const createResponse = await request(app.getHttpServer())
       .post('/products')
+      .set('x-api-key', 'fake-api-key')
       .send({
         name: 'Test Product 3',
         description: 'This is yet another test product',
@@ -90,6 +94,7 @@ describe('AppController (e2e) - SQLite in-memory', () => {
 
     return await request(app.getHttpServer())
       .put(`/products/${productId}`)
+      .set('x-api-key', 'fake-api-key')
       .send({
         name: 'Updated Test Product 3',
         description: 'This is an updated test product',
@@ -112,6 +117,7 @@ describe('AppController (e2e) - SQLite in-memory', () => {
   it('Should adjust quantity of a product', async () => {
     const createResponse = await request(app.getHttpServer())
       .post('/products')
+      .set('x-api-key', 'fake-api-key')
       .send({
         name: 'Test Product 4',
         description: 'This is a quantity test product',
@@ -123,6 +129,7 @@ describe('AppController (e2e) - SQLite in-memory', () => {
     const productId = createResponse.body.id;
     return await request(app.getHttpServer())
       .patch(`/products/${productId}/adjust-stock`)
+      .set('x-api-key', 'fake-api-key')
       .send({ amount: 10 })
       .expect(200)
       .then((response) => {
@@ -134,6 +141,7 @@ describe('AppController (e2e) - SQLite in-memory', () => {
   it('Should get products with pagination', async () => {
     return await request(app.getHttpServer())
       .get('/products?page=1&limit=10')
+      .set('x-api-key', 'fake-api-key')
       .expect(200)
       .then((response) => {
         expect(response.body).toHaveProperty('items');
@@ -147,6 +155,7 @@ describe('AppController (e2e) - SQLite in-memory', () => {
   it('Should delete a product', async () => {
     const createResponse = await request(app.getHttpServer())
       .post('/products')
+      .set('x-api-key', 'fake-api-key')
       .send({
         name: 'Test Product 5',
         description: 'This is a delete test product',
@@ -160,10 +169,26 @@ describe('AppController (e2e) - SQLite in-memory', () => {
 
     await request(app.getHttpServer())
       .delete(`/products/${productId}`)
+      .set('x-api-key', 'fake-api-key')
       .expect(204);
 
     return await request(app.getHttpServer())
       .get(`/products/${productId}`)
+      .set('x-api-key', 'fake-api-key')
       .expect(404);
+  });
+
+  it('should return 401 UnauthorizedException because the x-api-key is not correct', async () => {
+    await request(app.getHttpServer())
+      .post('/products')
+      .set('x-api-key', 'not-correct')
+      .send({
+        ...product,
+        sku: 'SKU654321',
+      })
+      .expect(401)
+      .then((response) => {
+        expect(response.body.message).toBe('x-api-key inválida.');
+      });
   });
 });
